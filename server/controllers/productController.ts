@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { Products, IProductDocument } from '../config/db';
+import { Products, IProductDocument, generateObjectId } from '../config/db';
+import { AuthenticatedRequest } from '../middleware/auth';
 
 /**
  * @desc    Fetch all products with optional search, category filter, and sorting
@@ -192,5 +193,84 @@ export async function deleteProduct(req: Request, res: Response): Promise<void> 
     res.json({ message: 'Product removed successfully' });
   } catch (error: any) {
     res.status(500).json({ message: error.message || 'Error deleting product' });
+  }
+}
+
+/**
+ * @desc    Add or update customer review for a product
+ * @route   POST /api/products/:id/reviews
+ * @access  Private (Authenticated users)
+ */
+export async function addProductReview(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { rating, title, comment } = req.body;
+
+    if (!req.user) {
+      res.status(401).json({ message: 'Authentication required to post a review' });
+      return;
+    }
+
+    const numRating = Number(rating);
+    if (isNaN(numRating) || numRating < 1 || numRating > 5) {
+      res.status(400).json({ message: 'Rating must be an integer between 1 and 5' });
+      return;
+    }
+
+    if (!title || typeof title !== 'string' || title.trim().length < 2) {
+      res.status(400).json({ message: 'Review headline must be at least 2 characters long' });
+      return;
+    }
+
+    if (!comment || typeof comment !== 'string' || comment.trim().length < 5) {
+      res.status(400).json({ message: 'Review comment must be at least 5 characters long' });
+      return;
+    }
+
+    const product = await Products.findById(id);
+    if (!product) {
+      res.status(404).json({ message: 'Product not found' });
+      return;
+    }
+
+    const reviews = product.reviews ? [...product.reviews] : [];
+    const existingIndex = reviews.findIndex((r) => r.userId === req.user?._id);
+
+    const reviewData = {
+      _id: existingIndex >= 0 ? reviews[existingIndex]._id : generateObjectId(),
+      userId: req.user._id,
+      userName: req.user.name || 'NovaCart Customer',
+      rating: Math.round(numRating),
+      title: title.trim(),
+      comment: comment.trim(),
+      verifiedPurchase: true,
+      createdAt: new Date().toISOString(),
+    };
+
+    if (existingIndex >= 0) {
+      reviews[existingIndex] = reviewData;
+    } else {
+      reviews.unshift(reviewData);
+    }
+
+    const totalReviews = reviews.length;
+    const avgRating =
+      totalReviews > 0
+        ? Math.round((reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews) * 10) / 10
+        : 5.0;
+
+    const updated = await Products.findByIdAndUpdate(id, {
+      reviews,
+      rating: avgRating,
+      numReviews: totalReviews,
+    });
+
+    res.status(201).json({
+      message: existingIndex >= 0 ? 'Review updated successfully' : 'Review submitted successfully',
+      review: reviewData,
+      product: updated,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || 'Error submitting review' });
   }
 }

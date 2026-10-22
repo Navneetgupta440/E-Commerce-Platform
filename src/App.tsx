@@ -147,6 +147,12 @@ function MainApp() {
                   product={currentProduct}
                   onBack={() => handleNavigate('products')}
                   onSelectCategory={handleSelectCategory}
+                  onNavigateToLogin={() => handleNavigate('login')}
+                  onProductUpdated={(updated) => {
+                    setProducts((prev) =>
+                      prev.map((p) => (p._id === updated._id ? updated : p))
+                    );
+                  }}
                 />
               ) : (
                 <div className="py-16 text-center space-y-4">

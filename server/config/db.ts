@@ -21,6 +21,17 @@ export interface IUserDocument {
   updatedAt: string;
 }
 
+export interface IReview {
+  _id: string;
+  userId: string;
+  userName: string;
+  rating: number;
+  title: string;
+  comment: string;
+  verifiedPurchase?: boolean;
+  createdAt: string;
+}
+
 export interface IProductDocument {
   _id: string;
   name: string;
@@ -31,6 +42,7 @@ export interface IProductDocument {
   stock: number;
   rating: number;
   numReviews: number;
+  reviews?: IReview[];
   featured?: boolean;
   createdAt: string;
   updatedAt: string;
@@ -216,8 +228,50 @@ export async function connectDB(): Promise<void> {
       category: 'Audio',
       stock: 14,
       rating: 4.8,
-      numReviews: 42,
+      numReviews: 4,
       featured: true,
+      reviews: [
+        {
+          _id: 'rev_001_1',
+          userId: 'usr_seed_1',
+          userName: 'Marcus Chen',
+          rating: 5,
+          title: 'Unbelievable noise cancellation on trans-Atlantic flights',
+          comment: 'I travel frequently for work and these headphones are an absolute lifesaver. The battery lasts through full 14-hour flights with ANC continuously engaged. Voice clarity during conference calls is crisp.',
+          verifiedPurchase: true,
+          createdAt: new Date('2025-01-14T09:30:00Z').toISOString(),
+        },
+        {
+          _id: 'rev_001_2',
+          userId: 'usr_seed_2',
+          userName: 'Elena Rostova',
+          rating: 5,
+          title: 'Remarkable soundstage and lightweight comfort',
+          comment: 'Far lighter and softer headband padding than the XM4. The sound balance right out of the box is refined, and the custom EQ in the companion app gives deep punchy bass.',
+          verifiedPurchase: true,
+          createdAt: new Date('2025-01-20T14:15:00Z').toISOString(),
+        },
+        {
+          _id: 'rev_001_3',
+          userId: 'usr_seed_3',
+          userName: 'Liam Gallagher',
+          rating: 4,
+          title: 'Great headphones, wish it folded smaller',
+          comment: 'Audio performance and ambient awareness modes are class-leading. My only minor gripe is the case is slightly larger than previous generations because the cups don’t fold inward.',
+          verifiedPurchase: true,
+          createdAt: new Date('2025-01-28T18:45:00Z').toISOString(),
+        },
+        {
+          _id: 'rev_001_4',
+          userId: 'usr_seed_4',
+          userName: 'Sophia Martinez',
+          rating: 5,
+          title: 'Crystal clear calls and rapid multi-point switching',
+          comment: 'Connects to my MacBook Pro and iPhone simultaneously with zero latency or stutter. The auto-pause when you speak is very convenient in office environments.',
+          verifiedPurchase: true,
+          createdAt: new Date('2025-02-04T11:20:00Z').toISOString(),
+        },
+      ],
     },
     {
       _id: '652b11112222333344440002',
@@ -228,8 +282,40 @@ export async function connectDB(): Promise<void> {
       category: 'Wearables',
       stock: 9,
       rating: 4.9,
-      numReviews: 87,
+      numReviews: 3,
       featured: true,
+      reviews: [
+        {
+          _id: 'rev_002_1',
+          userId: 'usr_seed_5',
+          userName: 'David Miller',
+          rating: 5,
+          title: 'Double tap gesture is magical for daily tasks',
+          comment: 'The double tap feature is surprisingly useful when cooking or holding groceries. Screen brightness under direct California sunlight is outstanding at 2000 nits.',
+          verifiedPurchase: true,
+          createdAt: new Date('2025-01-18T10:12:00Z').toISOString(),
+        },
+        {
+          _id: 'rev_002_2',
+          userId: 'usr_seed_6',
+          userName: 'Sarah Jenkins',
+          rating: 5,
+          title: 'Unmatched health tracking and ECG precision',
+          comment: 'Tracks heart rate zones accurately during intense marathon training sessions. Battery easily lasts 24 to 30 hours with moderate workouts.',
+          verifiedPurchase: true,
+          createdAt: new Date('2025-01-25T16:40:00Z').toISOString(),
+        },
+        {
+          _id: 'rev_002_3',
+          userId: 'usr_seed_7',
+          userName: 'Kenji Sato',
+          rating: 4,
+          title: 'Smooth performance and premium haptics',
+          comment: 'S9 chip makes Siri processing instant without requiring internet. Solid upgrade from my Series 5.',
+          verifiedPurchase: true,
+          createdAt: new Date('2025-02-01T08:25:00Z').toISOString(),
+        },
+      ],
     },
     {
       _id: '652b11112222333344440003',

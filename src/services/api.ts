@@ -11,6 +11,17 @@ export interface User {
   token?: string;
 }
 
+export interface Review {
+  _id: string;
+  userId: string;
+  userName: string;
+  rating: number;
+  title: string;
+  comment: string;
+  verifiedPurchase?: boolean;
+  createdAt: string;
+}
+
 export interface Product {
   _id: string;
   name: string;
@@ -21,6 +32,7 @@ export interface Product {
   stock: number;
   rating: number;
   numReviews: number;
+  reviews?: Review[];
   featured?: boolean;
   createdAt: string;
   updatedAt: string;
@@ -241,5 +253,17 @@ export const api = {
       headers: getAuthHeader(),
     });
     return handleResponse<{ wishlist: string[] }>(res);
+  },
+
+  async createProductReview(
+    productId: string,
+    data: { rating: number; title: string; comment: string }
+  ): Promise<{ message: string; review: Review; product: Product }> {
+    const res = await fetch(`/api/products/${productId}/reviews`, {
+      method: 'POST',
+      headers: getAuthHeader(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse<{ message: string; review: Review; product: Product }>(res);
   },
 };
