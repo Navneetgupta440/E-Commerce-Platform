@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  /* NovaCart Premium Brand Color System: Deep Blues & Emerald Greens */
+  --color-nova-950: #060b17;
+  --color-nova-900: #0a1329;
+  --color-nova-850: #0f1d3d;
+  --color-nova-800: #15264f;
+  --color-nova-700: #1c356d;
+  --color-nova-600: #25468f;
+  --color-nova-500: #3b82f6;
+  --color-nova-400: #60a5fa;
+  --color-nova-300: #93c5fd;
+  --color-nova-200: #bfdbfe;
+  --color-nova-100: #dbeafe;
+  --color-nova-50: #eff6ff;
+
+  /* Emerald & Mint Brand Accents */
+  --color-emerald-accent-950: #022017;
+  --color-emerald-accent-900: #043828;
+  --color-emerald-accent-800: #065f46;
+  --color-emerald-accent-700: #047857;
+  --color-emerald-accent-600: #059669;
+  --color-emerald-accent-500: #10b981;
+  --color-emerald-accent-400: #34d399;
+  --color-emerald-accent-300: #6ee7b7;
+  --color-emerald-accent-200: #a7f3d0;
+  --color-emerald-accent-100: #d1fae5;
+  --color-emerald-accent-50: #ecfdf5;
+
+  /* Cyan & Teal Luminous Highlights */
+  --color-cyan-glow-500: #06b6d4;
+  --color-cyan-glow-400: #22d3ee;
+}
+
+@layer base {
+  body {
+    @apply transition-colors duration-200;
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "NovaCart - MERN Stack E-Commerce Platform",
+  "description": "A beginner-friendly, full-featured MERN Stack E-Commerce store with React frontend, Express REST API, MongoDB data models, JWT authentication, and admin product/order management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
