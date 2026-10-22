@@ -7,6 +7,7 @@ export interface User {
   name: string;
   email: string;
   role: 'user' | 'admin';
+  wishlist?: string[];
   token?: string;
 }
 
@@ -224,5 +225,21 @@ export const api = {
       headers: getAuthHeader(),
     });
     return handleResponse<{ message: string }>(res);
+  },
+
+  async toggleWishlist(productId: string): Promise<{ wishlist: string[]; isAdded: boolean; productId: string }> {
+    const res = await fetch('/api/users/wishlist/toggle', {
+      method: 'POST',
+      headers: getAuthHeader(),
+      body: JSON.stringify({ productId }),
+    });
+    return handleResponse<{ wishlist: string[]; isAdded: boolean; productId: string }>(res);
+  },
+
+  async getWishlist(): Promise<{ wishlist: string[] }> {
+    const res = await fetch('/api/users/wishlist', {
+      headers: getAuthHeader(),
+    });
+    return handleResponse<{ wishlist: string[] }>(res);
   },
 };

@@ -46,6 +46,7 @@ export async function registerUser(req: Request, res: Response): Promise<void> {
       name: user.name,
       email: user.email,
       role: user.role,
+      wishlist: user.wishlist || [],
       token,
       message: 'Account registered successfully',
     });
@@ -89,6 +90,7 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
       name: user.name,
       email: user.email,
       role: user.role,
+      wishlist: user.wishlist || [],
       token,
       message: 'Login successful',
     });
@@ -112,8 +114,90 @@ export async function getUserProfile(
       return;
     }
 
-    res.json(req.user);
+    res.json({
+      ...req.user,
+      wishlist: req.user.wishlist || [],
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message || 'Error fetching user profile' });
   }
 }
+
+/**
+ * @desc    Toggle a product in user's wishlist
+ * @route   POST /api/users/wishlist/toggle or PUT /api/users/wishlist/:productId
+ * @access  Private
+ */
+export async function toggleWishlist(
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ message: 'Not authorized' });
+      return;
+    }
+
+    const productId = req.params.productId || req.body.productId;
+    if (!productId) {
+      res.status(400).json({ message: 'Product ID is required' });
+      return;
+    }
+
+    const user = await Users.findById(req.user._id);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    const currentWishlist = Array.isArray(user.wishlist) ? [...user.wishlist] : [];
+    const index = currentWishlist.indexOf(productId);
+    let isAdded = false;
+
+    if (index > -1) {
+      currentWishlist.splice(index, 1);
+      isAdded = false;
+    } else {
+      currentWishlist.push(productId);
+      isAdded = true;
+    }
+
+    const updated = await Users.findByIdAndUpdate(user._id, {
+      wishlist: currentWishlist,
+    });
+
+    res.json({
+      wishlist: updated?.wishlist || currentWishlist,
+      isAdded,
+      productId,
+      message: isAdded ? 'Added to wishlist' : 'Removed from wishlist',
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || 'Failed to update wishlist' });
+  }
+}
+
+/**
+ * @desc    Get current user's wishlist
+ * @route   GET /api/users/wishlist
+ * @access  Private
+ */
+export async function getWishlist(
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ message: 'Not authorized' });
+      return;
+    }
+
+    const user = await Users.findById(req.user._id);
+    res.json({
+      wishlist: user?.wishlist || [],
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || 'Failed to get wishlist' });
+  }
+}
+

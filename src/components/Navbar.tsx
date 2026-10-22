@@ -12,6 +12,8 @@ import {
   Sparkles,
   Sun,
   Moon,
+  Heart,
+  Coffee,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -35,7 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   searchQuery,
   setSearchQuery,
 }) => {
-  const { user, logout, loginAsDemoUser, loginAsDemoAdmin } = useAuth();
+  const { user, wishlist, logout, loginAsDemoUser, loginAsDemoAdmin } = useAuth();
   const { itemCount } = useCart();
   const { theme, toggleTheme } = useTheme();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -195,8 +197,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </div>
 
-          {/* Right Action Icons: Theme Toggle, Cart & Auth */}
-          <div className="flex items-center gap-2.5">
+          {/* Right Action Icons: Theme Toggle, Wishlist, Cart & Auth */}
+          <div className="flex items-center gap-2">
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
@@ -208,6 +210,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Sun className="w-4 h-4 text-amber-400 hover:rotate-45 transition-transform" />
               ) : (
                 <Moon className="w-4 h-4 text-slate-300" />
+              )}
+            </button>
+
+            {/* Wishlist Button */}
+            <button
+              onClick={() => onNavigate('wishlist')}
+              className={`relative p-2 rounded-xl transition-colors cursor-pointer ${
+                currentView === 'wishlist'
+                  ? 'text-rose-400 bg-rose-950/40 border border-rose-500/30'
+                  : 'text-slate-300 hover:text-rose-400 hover:bg-nova-850'
+              }`}
+              title="View Saved Wishlist"
+              aria-label="View Saved Wishlist"
+            >
+              <Heart className={`w-5 h-5 ${wishlist.length > 0 ? 'fill-rose-500/30 text-rose-400' : ''}`} />
+              {wishlist.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-black rounded-full h-4.5 min-w-4.5 px-1 flex items-center justify-center shadow-md shadow-rose-500/40">
+                  {wishlist.length}
+                </span>
               )}
             </button>
 
@@ -260,6 +281,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                         {user.role === 'admin' ? 'Admin Access' : 'Verified Customer'}
                       </span>
                     </div>
+
+                    <button
+                      onClick={() => {
+                        setIsUserMenuOpen(false);
+                        onNavigate('wishlist');
+                      }}
+                      className="w-full text-left px-4 py-2 text-xs text-slate-300 hover:bg-nova-850 hover:text-white flex items-center gap-2 cursor-pointer"
+                    >
+                      <Heart className="w-3.5 h-3.5 text-rose-400" />
+                      <span>My Wishlist ({wishlist.length})</span>
+                    </button>
 
                     <button
                       onClick={() => {
@@ -388,6 +420,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="w-full text-left px-3 py-2 font-medium hover:bg-nova-850 rounded-lg"
             >
               Catalog
+            </button>
+            <button
+              onClick={() => {
+                onNavigate('wishlist');
+                setIsMobileMenuOpen(false);
+              }}
+              className="w-full text-left px-3 py-2 font-medium hover:bg-nova-850 rounded-lg flex items-center gap-2 text-rose-300"
+            >
+              <Heart className="w-3.5 h-3.5 text-rose-400" />
+              <span>Wishlist ({wishlist.length})</span>
             </button>
             {user && (
               <button

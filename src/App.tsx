@@ -8,6 +8,7 @@ import { HomeView } from './views/HomeView';
 import { ProductsView } from './views/ProductsView';
 import { ProductDetailsView } from './views/ProductDetailsView';
 import { CartView } from './views/CartView';
+import { WishlistView } from './views/WishlistView';
 import { MyOrdersView } from './views/MyOrdersView';
 import { AdminDashboardView } from './views/AdminDashboardView';
 import { AuthView } from './views/AuthView';
@@ -165,6 +166,14 @@ function MainApp() {
                 onNavigateToProducts={() => handleNavigate('products')}
                 onNavigateToLogin={() => handleNavigate('login')}
                 onOrderPlaced={handleOrderPlaced}
+              />
+            )}
+
+            {currentView === 'wishlist' && (
+              <WishlistView
+                products={products}
+                onSelectProduct={handleSelectProduct}
+                onNavigateToProducts={() => handleNavigate('products')}
               />
             )}
 

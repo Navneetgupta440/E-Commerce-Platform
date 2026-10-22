@@ -10,6 +10,9 @@ import {
   Terminal,
   BookOpen,
   CheckCircle2,
+  Coffee,
+  Code2,
+  Heart,
 } from 'lucide-react';
 import { Logo } from './Logo';
 
@@ -22,7 +25,7 @@ export const MernArchitectureModal: React.FC<MernArchitectureModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const [activeTab, setActiveTab] = useState<'architecture' | 'api' | 'security' | 'setup'>('architecture');
+  const [activeTab, setActiveTab] = useState<'architecture' | 'api' | 'security' | 'setup' | 'java-mern'>('architecture');
 
   if (!isOpen) return null;
 
@@ -90,6 +93,17 @@ export const MernArchitectureModal: React.FC<MernArchitectureModalProps> = ({
             }`}
           >
             Local Setup Guide
+          </button>
+          <button
+            onClick={() => setActiveTab('java-mern')}
+            className={`py-3 px-4 text-xs font-bold border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 ${
+              activeTab === 'java-mern'
+                ? 'border-amber-400 text-amber-400 bg-slate-900/60'
+                : 'border-transparent text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Coffee className="w-3.5 h-3.5 text-amber-400" />
+            <span>Java &amp; MERN Interop</span>
           </button>
         </div>
 
@@ -295,6 +309,85 @@ export const MernArchitectureModal: React.FC<MernArchitectureModalProps> = ({
                   <div className="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
                     <span className="font-bold text-amber-300">Administrator:</span> admin@novacart.com / <span className="font-mono text-amber-300">admin123</span>
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'java-mern' && (
+            <div className="space-y-6">
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-950/40 to-slate-900 border border-amber-500/30">
+                <div className="flex items-center gap-2 text-amber-400 font-bold mb-1">
+                  <Coffee className="w-5 h-5 text-amber-400" />
+                  <span className="text-sm">Java &amp; MERN Stack Full Compatibility</span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  NovaCart combines the agility of the <strong>MERN stack</strong> (MongoDB, Express.js, React.js, Node.js) with first-class <strong>Java 17/21 &amp; Spring Boot</strong> interoperability. Enterprise Java microservices consume the Node.js Express REST endpoints and MongoDB documents via type-safe Java records and HTTP/2 clients.
+                </p>
+              </div>
+
+              {/* Architecture flow */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-center">
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span className="text-[10px] font-mono text-cyan-400 font-bold block">FRONTEND</span>
+                  <p className="font-bold text-white text-xs mt-1">React.js (ES6+)</p>
+                  <p className="text-[11px] text-slate-400 mt-1">Single Page App with Hooks, Tailwind CSS &amp; Wishlist Context</p>
+                </div>
+                <div className="p-3 bg-slate-950 rounded-xl border border-emerald-500/30 bg-emerald-950/20">
+                  <span className="text-[10px] font-mono text-emerald-400 font-bold block">BACKEND REST API</span>
+                  <p className="font-bold text-white text-xs mt-1">Node.js + Express.js</p>
+                  <p className="text-[11px] text-slate-400 mt-1">JWT Auth, MongoDB Document Collections, Wishlist &amp; Order Pipeline</p>
+                </div>
+                <div className="p-3 bg-slate-950 rounded-xl border border-amber-500/30 bg-amber-950/20">
+                  <span className="text-[10px] font-mono text-amber-400 font-bold block">JAVA ECOSYSTEM</span>
+                  <p className="font-bold text-white text-xs mt-1">Java 21 / Spring Boot 3</p>
+                  <p className="text-[11px] text-slate-400 mt-1">NovaCartClient.java SDK with HttpClient, Virtual Threads &amp; Bridge Controller</p>
+                </div>
+              </div>
+
+              {/* Java Client Code Sample */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-xs text-amber-300 flex items-center gap-1.5">
+                    <Code2 className="w-4 h-4 text-amber-400" />
+                    <span>Java 21 Client SDK (server/java/NovaCartClient.java)</span>
+                  </h4>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-500/30 font-mono">
+                    Java 17+ HTTP Client
+                  </span>
+                </div>
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-300 overflow-x-auto space-y-1">
+                  <span className="text-slate-500">// Initialize Java SDK connecting to Node.js backend</span><br />
+                  <span className="text-amber-400">NovaCartClient</span> client = <span className="text-cyan-400">new</span> <span className="text-amber-400">NovaCartClient</span>(<span className="text-emerald-300">"http://localhost:3000"</span>);<br />
+                  <br />
+                  <span className="text-slate-500">// 1. Authenticate with Node.js Express JWT</span><br />
+                  <span className="text-amber-400">LoginResponse</span> auth = client.<span className="text-cyan-300">login</span>(<span className="text-emerald-300">"demo@example.com"</span>, <span className="text-emerald-300">"user123"</span>);<br />
+                  <br />
+                  <span className="text-slate-500">// 2. Query MongoDB catalog through Express REST API</span><br />
+                  <span className="text-amber-400">String</span> productsJson = client.<span className="text-cyan-300">getProducts</span>();<br />
+                  <br />
+                  <span className="text-slate-500">// 3. Save / Toggle item in User Wishlist array</span><br />
+                  <span className="text-amber-400">String</span> wishlistResult = client.<span className="text-cyan-300">toggleWishlist</span>(<span className="text-emerald-300">"652b11112222333344440011"</span>);<br />
+                </div>
+              </div>
+
+              {/* Vanilla JavaScript Client Sample */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-xs text-emerald-300 flex items-center gap-1.5">
+                    <Code2 className="w-4 h-4 text-emerald-400" />
+                    <span>Pure JavaScript ES6+ Client (server/utils/novacart-client.js)</span>
+                  </h4>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30 font-mono">
+                    JavaScript / Node.js
+                  </span>
+                </div>
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-300 overflow-x-auto space-y-1">
+                  <span className="text-cyan-400">import</span> &#123; NovaCartJsClient &#125; <span className="text-cyan-400">from</span> <span className="text-emerald-300">'./novacart-client.js'</span>;<br />
+                  <br />
+                  <span className="text-cyan-400">const</span> client = <span className="text-cyan-400">new</span> <span className="text-emerald-400">NovaCartJsClient</span>(<span className="text-emerald-300">'http://localhost:3000'</span>);<br />
+                  <span className="text-cyan-400">await</span> client.<span className="text-cyan-300">login</span>(<span className="text-emerald-300">'demo@example.com'</span>, <span className="text-emerald-300">'user123'</span>);<br />
+                  <span className="text-cyan-400">const</span> wishlist = <span className="text-cyan-400">await</span> client.<span className="text-cyan-300">toggleWishlist</span>(productId);<br />
                 </div>
               </div>
             </div>

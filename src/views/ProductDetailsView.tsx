@@ -9,9 +9,11 @@ import {
   RotateCcw,
   Minus,
   Plus,
+  Heart,
 } from 'lucide-react';
 import { Product } from '../services/api';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 interface ProductDetailsViewProps {
   product: Product;
@@ -25,8 +27,11 @@ export const ProductDetailsView: React.FC<ProductDetailsViewProps> = ({
   onSelectCategory,
 }) => {
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useAuth();
   const [quantity, setQuantity] = useState<number>(1);
   const [justAdded, setJustAdded] = useState(false);
+
+  const isFavorite = isInWishlist(product._id);
 
   const isOutOfStock = product.stock <= 0;
   const isLowStock = product.stock > 0 && product.stock <= 5;
@@ -96,9 +101,23 @@ export const ProductDetailsView: React.FC<ProductDetailsViewProps> = ({
             {product.category}
           </span>
 
-          <span className="absolute top-6 right-6 font-mono text-[11px] text-slate-400 bg-slate-900/90 backdrop-blur-md px-2.5 py-1 rounded-md border border-slate-800">
-            ID: {product._id.slice(-6)}
-          </span>
+          <button
+            type="button"
+            onClick={() => toggleWishlist(product._id)}
+            className={`absolute top-6 right-6 p-2.5 rounded-full backdrop-blur-md transition-all shadow-md active:scale-95 cursor-pointer ${
+              isFavorite
+                ? 'bg-rose-950/90 text-rose-500 border border-rose-500/50 shadow-rose-500/30'
+                : 'bg-slate-900/80 hover:bg-slate-900 text-slate-300 hover:text-rose-400 border border-slate-700/60'
+            }`}
+            title={isFavorite ? 'Remove from Wishlist' : 'Save to Wishlist'}
+            aria-label={isFavorite ? 'Remove from wishlist' : 'Add to wishlist'}
+          >
+            <Heart
+              className={`w-5 h-5 transition-transform duration-200 ${
+                isFavorite ? 'fill-rose-500 text-rose-500 scale-110' : ''
+              }`}
+            />
+          </button>
         </div>
 
         {/* Right: Details & Purchase Controls */}
@@ -216,6 +235,28 @@ export const ProductDetailsView: React.FC<ProductDetailsViewProps> = ({
                     <span>Add to Shopping Cart</span>
                   </>
                 )}
+              </button>
+
+              {/* Wishlist Button */}
+              <button
+                type="button"
+                onClick={() => toggleWishlist(product._id)}
+                className={`py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 border transition-all cursor-pointer ${
+                  isFavorite
+                    ? 'bg-rose-950/80 border-rose-500/50 text-rose-400 hover:bg-rose-900/60 shadow-lg shadow-rose-500/10'
+                    : 'bg-slate-900 border-slate-750 text-slate-300 hover:text-rose-400 hover:border-rose-400/50 hover:bg-slate-850'
+                }`}
+                title={isFavorite ? 'Saved to Wishlist' : 'Save to Wishlist'}
+                aria-label={isFavorite ? 'Remove from wishlist' : 'Add to wishlist'}
+              >
+                <Heart
+                  className={`w-5 h-5 transition-transform duration-200 ${
+                    isFavorite ? 'fill-rose-500 text-rose-500 scale-110' : ''
+                  }`}
+                />
+                <span className="hidden sm:inline">
+                  {isFavorite ? 'Saved' : 'Wishlist'}
+                </span>
               </button>
             </div>
 

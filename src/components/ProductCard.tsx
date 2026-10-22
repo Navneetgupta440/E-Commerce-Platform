@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Star, ShoppingCart, Check, Eye } from 'lucide-react';
+import { Star, ShoppingCart, Check, Eye, Heart } from 'lucide-react';
 import { Product } from '../services/api';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 interface ProductCardProps {
   product: Product;
@@ -10,7 +11,15 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) => {
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useAuth();
   const [justAdded, setJustAdded] = useState(false);
+
+  const isFavorite = isInWishlist(product._id);
+
+  const handleToggleWishlist = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleWishlist(product._id);
+  };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -43,8 +52,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
           {product.category}
         </span>
 
+        {/* Wishlist Heart Button */}
+        <button
+          type="button"
+          onClick={handleToggleWishlist}
+          className={`absolute top-3 right-3 z-10 p-2 rounded-full backdrop-blur-md transition-all duration-200 shadow-md active:scale-90 cursor-pointer ${
+            isFavorite
+              ? 'bg-rose-950/90 text-rose-500 border border-rose-500/50 shadow-rose-500/20'
+              : 'bg-slate-900/85 hover:bg-slate-900 text-slate-300 hover:text-rose-400 border border-slate-700/60 hover:border-rose-400/50'
+          }`}
+          title={isFavorite ? 'Remove from Wishlist' : 'Save to Wishlist'}
+          aria-label={isFavorite ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
+        >
+          <Heart
+            className={`w-4 h-4 transition-all duration-200 ${
+              isFavorite
+                ? 'fill-rose-500 text-rose-500 scale-110 drop-shadow-[0_0_6px_rgba(244,63,94,0.6)]'
+                : 'hover:scale-110'
+            }`}
+          />
+        </button>
+
         {/* Stock indicator badge */}
-        <div className="absolute top-3 right-3">
+        <div className="absolute bottom-3 left-3 z-10">
           {isOutOfStock ? (
             <span className="bg-rose-500/90 text-white text-[11px] font-semibold px-2.5 py-0.5 rounded-full shadow-xs">
               Sold Out

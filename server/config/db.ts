@@ -16,6 +16,7 @@ export interface IUserDocument {
   email: string;
   password: string; // bcrypt hash
   role: 'user' | 'admin';
+  wishlist?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -185,6 +186,7 @@ export async function connectDB(): Promise<void> {
     email: 'admin@novacart.com',
     password: adminPasswordHash,
     role: 'admin',
+    wishlist: [],
     createdAt: new Date('2025-01-01T00:00:00Z').toISOString(),
     updatedAt: new Date('2025-01-01T00:00:00Z').toISOString(),
   });
@@ -198,6 +200,7 @@ export async function connectDB(): Promise<void> {
     email: 'demo@example.com',
     password: userPasswordHash,
     role: 'user',
+    wishlist: ['652b11112222333344440001'],
     createdAt: new Date('2025-01-05T00:00:00Z').toISOString(),
     updatedAt: new Date('2025-01-05T00:00:00Z').toISOString(),
   });
@@ -322,6 +325,42 @@ export async function connectDB(): Promise<void> {
       stock: 12,
       rating: 4.7,
       numReviews: 39,
+      featured: false,
+    },
+    {
+      _id: '652b11112222333344440011',
+      name: 'Java 21 & Spring Boot Enterprise MERN Toolkit',
+      description: 'Production-ready suite for integrating Java Spring Boot 3 microservices with React.js frontends and Node.js/MongoDB REST backends. Includes Virtual Threads & JWT bridge.',
+      price: 149.0,
+      imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80',
+      category: 'Java & MERN Dev',
+      stock: 50,
+      rating: 4.9,
+      numReviews: 88,
+      featured: true,
+    },
+    {
+      _id: '652b11112222333344440012',
+      name: 'NovaCart Official Java Client SDK & Spring Starter',
+      description: 'Type-safe Java 17/21 SDK for NovaCart MERN store. Features built-in HttpClient, Jackson serialization, auto-configured Spring beans, and JWT interceptors.',
+      price: 49.0,
+      imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
+      category: 'Java & MERN Dev',
+      stock: 75,
+      rating: 4.95,
+      numReviews: 64,
+      featured: true,
+    },
+    {
+      _id: '652b11112222333344440013',
+      name: 'JVM Concurrency & Performance Tuning Guide',
+      description: 'Masterclass on Project Loom Virtual Threads, ZGC garbage collection tuning, reactive streams, and high-throughput Node.js to Java REST interoperability.',
+      price: 79.5,
+      imageUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
+      category: 'Java & MERN Dev',
+      stock: 30,
+      rating: 4.85,
+      numReviews: 41,
       featured: false,
     },
   ];
